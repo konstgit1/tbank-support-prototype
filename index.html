@@ -5,18 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Т-Банк Поддержка — Прототип</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  /* Цвета бренда */
+  --c-primary: #FFDD2D;
+  --c-primary-dark: #e6c626;
+  --c-blue: #4389FF;
+  --c-blue-link: #1a73e8;
+  --c-blue-sender: #4a90d9;
 
-html { background: #d1d1d6; }
+  /* Фоны */
+  --c-bg: #fff;
+  --c-bg-html: #d1d1d6;
+  --c-bg-msg: #F0F0F0;
+  --c-bg-input: #f9f9f9;
+  --c-bg-active: #f2f2f7;
+  --c-bg-sheet-icon: #e8f0ff;
+
+  /* Текст */
+  --c-text: #1a1a1a;
+  --c-text-secondary: #666;
+  --c-text-muted: #999;
+  --c-text-faint: #aaa;
+  --c-text-label: #8e8e93;
+
+  /* Границы */
+  --c-border: #eee;
+  --c-border-light: #efefef;
+  --c-divider: #e5e5ea;
+
+  /* Статусы */
+  --c-status-resolved-bg: #e6f4ea;
+  --c-status-resolved: #1e7e34;
+  --c-status-closed-bg: #f0f0f0;
+  --c-status-closed: #666;
+  --c-status-active-bg: #fff3e0;
+  --c-status-active: #d84f00;
+
+  /* Аватары */
+  --c-avatar-operator: #c8c8c8;
+
+  /* Размеры */
+  --max-w: 430px;
+  --font-body: 15px;
+  --font-msg: 14px;
+  --font-small: 13px;
+  --font-xs: 12px;
+  --font-time: 11px;
+  --radius-msg: 18px;
+  --radius-card: 14px;
+  --radius-sheet: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: var(--c-bg-html); }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
-  background: #fff;
-  color: #1a1a1a;
-  font-size: 15px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: var(--font-body);
   line-height: 1.4;
   width: 100%;
-  max-width: 430px;
+  max-width: var(--max-w);
   margin: 0 auto;
   height: 100dvh;
   overflow: hidden;
@@ -24,36 +74,32 @@ body {
   box-shadow: 0 0 40px rgba(0,0,0,0.25);
 }
 
+/* === Экраны === */
 .screen {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  background: var(--c-bg);
   transition: transform 0.3s ease;
 }
 .screen.hidden-right { transform: translateX(100%); }
 .screen.hidden-left { transform: translateX(-100%); }
 .screen.visible { transform: translateX(0); }
 
-/* Header */
+/* === Header === */
 .header {
-  background: #fff;
+  background: var(--c-bg);
   padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #eee;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--c-border);
   min-height: 56px;
-  position: relative;
-  z-index: 10;
+  position: relative; z-index: 10;
 }
 .header-back {
   width: 32px; height: 32px; border: none; background: none;
   font-size: 22px; color: #333; cursor: pointer;
   display: flex; align-items: center; justify-content: center; border-radius: 50%;
 }
-.header-back:active { background: #f0f0f0; }
+.header-back:active { background: var(--c-bg-msg); }
 .header-avatar {
   width: 40px; height: 40px; border-radius: 50%;
   overflow: hidden; flex-shrink: 0;
@@ -61,28 +107,27 @@ body {
 .header-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .header-info { flex: 1; }
 .header-title { font-weight: 600; font-size: 16px; }
-.header-subtitle { font-size: 12px; color: #999; }
+.header-subtitle { font-size: var(--font-xs); color: var(--c-text-muted); }
 .header-search {
   width: 32px; height: 32px; border: none; background: none;
-  font-size: 18px; color: #999; cursor: pointer;
+  font-size: 18px; color: var(--c-text-muted); cursor: pointer;
 }
 
-/* Sticky date */
+/* === Sticky date === */
 .sticky-date-wrap {
   position: relative; z-index: 5;
   text-align: center; pointer-events: none; height: 0;
 }
 .sticky-date {
-  display: inline-block; background: #e8e8e8; color: #666;
-  font-size: 13px; padding: 5px 16px; border-radius: 14px;
+  display: inline-block; background: rgba(232,232,232,0.7); color: var(--c-text-secondary);
+  font-size: var(--font-small); padding: 5px 16px; border-radius: 14px;
   position: relative; top: 10px;
   pointer-events: auto; cursor: pointer;
   transition: background 0.2s, color 0.2s, transform 0.15s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
-.sticky-date:active {
-  background: #FFDD2D; color: #1a1a1a; transform: scale(1.05);
-}
+.sticky-date:active { background: var(--c-primary); color: var(--c-text); transform: scale(1.05); }
 .sticky-date-icon { font-size: 11px; margin-left: 4px; opacity: 0.7; }
 
 @keyframes pulseHint {
@@ -91,44 +136,85 @@ body {
 }
 .sticky-date.hint-pulse { animation: pulseHint 2s ease-in-out 3; }
 
-/* Chat */
+/* === Чат === */
 .chat-body {
   flex: 1; overflow-y: auto; padding: 20px 16px 16px;
   display: flex; flex-direction: column; gap: 8px;
 }
 .date-marker {
   align-self: center;
-  font-size: 13px;
-  color: #aaa;
-  margin: 6px 0;
-  pointer-events: none;
+  font-size: var(--font-small); color: var(--c-text-faint);
+  margin: 6px 0; pointer-events: none;
 }
 
+/* Сообщения */
 .msg {
-  max-width: 82%; padding: 10px 14px; border-radius: 18px;
-  font-size: 14px; line-height: 1.45; position: relative; word-wrap: break-word;
+  max-width: 82%; padding: 10px 14px; border-radius: var(--radius-msg);
+  font-size: var(--font-msg); line-height: 1.45;
+  position: relative; word-wrap: break-word;
 }
-.msg-time { font-size: 11px; color: #999; margin-top: 2px; }
-.msg-bot { align-self: flex-start; background: #F0F0F0; border-radius: 18px 18px 18px 4px; }
-.msg-user { align-self: flex-end; background: #4389FF; color: #fff; border-radius: 18px 18px 4px 18px; }
-.msg-user .msg-time { color: rgba(255,255,255,0.7); }
-.msg-operator { align-self: flex-start; background: #F0F0F0; border-radius: 18px 18px 18px 4px; }
-.msg-sender { font-size: 12px; color: #4a90d9; margin-bottom: 2px; font-weight: 500; }
-.msg-link { color: #1a73e8; text-decoration: underline; cursor: pointer; }
+.msg-time {
+  font-size: var(--font-time); color: var(--c-text-muted);
+  margin-top: 2px;
+  display: flex; align-items: center; gap: 3px;
+}
+.msg-user .msg-time { justify-content: flex-end; }
+.msg-check {
+  display: inline-block; vertical-align: middle;
+  width: 16px; height: 11px; flex-shrink: 0;
+}
+.msg-user .msg-check { color: rgba(255,255,255,0.9); }
+.msg-bot {
+  align-self: flex-start; background: var(--c-bg-msg);
+  border-radius: var(--radius-msg) var(--radius-msg) var(--radius-msg) 4px;
+}
+.msg-user {
+  align-self: flex-end; background: var(--c-blue); color: #fff;
+  border-radius: var(--radius-msg) var(--radius-msg) 4px var(--radius-msg);
+}
+.msg-user .msg-time { color: rgba(255,255,255,0.85); }
+.msg-user .msg-check { color: rgba(255,255,255,0.7); }
+.msg-operator {
+  align-self: flex-start; background: var(--c-bg-msg);
+  border-radius: var(--radius-msg) var(--radius-msg) var(--radius-msg) 4px;
+}
+.msg-sender { font-size: var(--font-xs); color: var(--c-blue-sender); margin-bottom: 2px; font-weight: 500; }
+.msg-link { color: var(--c-blue-link); text-decoration: underline; cursor: pointer; }
+.msg-long { max-width: 90%; font-size: var(--font-small); }
 
+/* Msg row с аватаром */
+.msg-row {
+  display: flex; align-items: flex-end; gap: 8px;
+  align-self: flex-start; max-width: 90%;
+}
+.msg-row .msg { align-self: unset; max-width: 100%; }
+.msg-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--font-small); font-weight: 600; overflow: hidden;
+}
+.msg-avatar img { width: 32px; height: 32px; object-fit: cover; }
+.msg-avatar-operator { background: var(--c-avatar-operator); color: #fff; }
+
+/* Quick action */
 .quick-action {
-  display: inline-block; background: #F0F0F0; border: none;
-  border-radius: 20px; padding: 8px 18px; font-size: 14px;
-  color: #1a1a1a; align-self: flex-end;
+  display: inline-block; background: var(--c-bg-msg); border: none;
+  border-radius: 20px; padding: 8px 18px; font-size: var(--font-msg);
+  color: var(--c-text); align-self: flex-end;
 }
+.quick-action[data-click] { cursor: pointer; }
 
+/* Input bar */
 .input-bar {
-  background: #fff; padding: 10px 16px;
-  display: flex; align-items: center; gap: 10px; border-top: 1px solid #eee;
+  background: var(--c-bg); padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-top: 1px solid var(--c-border);
 }
 .input-field {
   flex: 1; border: 1px solid #e0e0e0; border-radius: 24px;
-  padding: 10px 16px; font-size: 15px; background: #f9f9f9; color: #999;
+  padding: 10px 16px; font-size: var(--font-body);
+  background: var(--c-bg-input); color: var(--c-text-muted);
 }
 .input-icon {
   width: 44px; height: 44px; border: none; background: none;
@@ -137,147 +223,123 @@ body {
 }
 .input-icon img { width: 32px; height: 32px; opacity: 0.45; }
 
-/* Message row with avatar */
-.msg-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  align-self: flex-start;
-  max-width: 90%;
-}
-.msg-row .msg { align-self: unset; max-width: 100%; }
-.msg-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  flex-shrink: 0;
+/* Scroll-to-bottom */
+.scroll-btn {
+  position: absolute; right: 16px; bottom: 70px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--c-bg); border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 600; overflow: hidden;
+  z-index: 20; transition: opacity 0.2s;
+  opacity: 0; pointer-events: none;
 }
-.msg-avatar img { width: 32px; height: 32px; object-fit: cover; }
-.msg-avatar-operator { background: #c8c8c8; color: #fff; }
+.scroll-btn.visible { opacity: 1; pointer-events: auto; }
+.scroll-btn svg { width: 18px; height: 18px; }
 
-/* Bottom sheet */
+/* === История обращений === */
+.history-body {
+  flex: 1; overflow-y: auto; padding: 12px 16px 24px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.history-year-group {
+  font-size: var(--font-xs); font-weight: 600; color: var(--c-text-label);
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 16px 4px 4px;
+  border-top: 1px solid var(--c-divider);
+  margin-top: 4px;
+  position: sticky; top: 0;
+  background: var(--c-bg);
+  z-index: 1;
+}
+.history-year-group:first-child {
+  border-top: none;
+  padding-top: 4px;
+  margin-top: 0;
+}
+.history-card {
+  background: var(--c-bg); border-radius: var(--radius-card);
+  padding: 14px 16px 12px;
+  cursor: pointer; transition: opacity 0.15s;
+  border: 1px solid var(--c-border-light);
+  display: flex; gap: 12px; align-items: center;
+}
+.history-card:active { opacity: 0.7; }
+.history-card-active { border-left: 3px solid var(--c-primary); padding-left: 13px; }
+.history-card-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.history-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.history-card-topic {
+  font-weight: 600; font-size: 15px; flex: 1; min-width: 0;
+  line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.history-card-status {
+  font-size: var(--font-xs); padding: 3px 10px; border-radius: 8px;
+  font-weight: 500; white-space: nowrap; flex-shrink: 0;
+}
+.status-resolved { background: var(--c-status-resolved-bg); color: var(--c-status-resolved); }
+.status-closed { background: var(--c-status-closed-bg); color: var(--c-status-closed); }
+.status-active { background: var(--c-status-active-bg); color: var(--c-status-active); }
+.history-card-preview {
+  font-size: var(--font-msg); color: #555; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.history-card-footer { display: flex; align-items: center; margin-top: 4px; gap: 0; }
+.history-card-date { font-size: var(--font-xs); color: #888; font-weight: 400; }
+.history-card-dot { font-size: var(--font-xs); color: #bbb; margin: 0 5px; }
+.history-card-operator { font-size: var(--font-xs); color: #888; }
+.history-card-chevron {
+  color: #c7c7cc; font-size: 20px; font-weight: 300;
+  flex-shrink: 0; line-height: 1;
+}
+
+/* === Bottom sheet === */
 .sheet-overlay {
   display: none; position: fixed;
   top: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 430px;
-  bottom: 0;
+  width: 100%; max-width: var(--max-w); bottom: 0;
   background: rgba(0,0,0,0.25); z-index: 80;
 }
 .sheet-overlay.show { display: block; }
 .bottom-sheet {
   position: fixed;
   left: 50%; transform: translateX(-50%) translateY(100%);
-  width: 100%; max-width: 430px;
-  bottom: 0;
-  background: #fff;
-  border-radius: 16px 16px 0 0;
+  width: 100%; max-width: var(--max-w); bottom: 0;
+  background: var(--c-bg);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
   z-index: 81;
   transition: transform 0.32s cubic-bezier(0.32,0,0,1);
 }
 .bottom-sheet.show { transform: translateX(-50%) translateY(0); }
-.sheet-handle {
-  width: 36px; height: 4px; background: #d1d1d6; border-radius: 2px;
-  margin: 10px auto 0;
-}
-.sheet-title {
-  font-size: 20px; font-weight: 700;
-  padding: 18px 20px 14px;
-  color: #000;
-}
-.sheet-divider { height: 0.5px; background: #e5e5ea; }
+.sheet-handle { width: 36px; height: 4px; background: #d1d1d6; border-radius: 2px; margin: 10px auto 0; }
+.sheet-title { font-size: 20px; font-weight: 700; padding: 18px 20px 14px; color: #000; }
+.sheet-divider { height: 0.5px; background: var(--c-divider); }
 .sheet-item {
   display: flex; align-items: center; gap: 16px;
   padding: 14px 20px; cursor: pointer;
 }
-.sheet-item:active { background: #f2f2f7; }
+.sheet-item:active { background: var(--c-bg-active); }
 .sheet-item-icon {
   width: 44px; height: 44px; border-radius: 50%;
-  background: #e8f0ff; flex-shrink: 0;
+  background: var(--c-bg-sheet-icon); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
 .sheet-item-icon svg { width: 22px; height: 22px; }
 .sheet-item-text { flex: 1; }
 .sheet-item-title { font-size: 16px; color: #000; font-weight: 500; }
-.sheet-item-subtitle { font-size: 13px; color: #8e8e93; margin-top: 2px; }
+.sheet-item-subtitle { font-size: var(--font-small); color: var(--c-text-label); margin-top: 2px; }
 .sheet-row {
   display: flex; align-items: center;
   padding: 16px 20px; cursor: pointer;
   font-size: 16px; color: #000; gap: 8px;
 }
-.sheet-row:active { background: #f2f2f7; }
+.sheet-row:active { background: var(--c-bg-active); }
 .sheet-row > span:first-child { flex: 1; line-height: 1.35; }
-.sheet-chevron {
-  color: #c7c7cc; font-size: 18px; font-weight: 300; flex-shrink: 0;
-}
+.sheet-chevron { color: #c7c7cc; font-size: 18px; font-weight: 300; flex-shrink: 0; }
 .sheet-bottom-pad { height: env(safe-area-inset-bottom, 24px); min-height: 24px; }
 
-/* Scroll-to-bottom button */
-.scroll-btn {
-  position: absolute;
-  right: 16px;
-  bottom: 70px;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: #fff;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 20;
-  transition: opacity 0.2s;
-  opacity: 0;
-  pointer-events: none;
-}
-.scroll-btn.visible { opacity: 1; pointer-events: auto; }
-.scroll-btn svg { width: 18px; height: 18px; }
-
-/* History */
-.history-body {
-  flex: 1; overflow-y: auto; padding: 12px 16px 24px;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.history-year-group {
-  font-size: 12px; font-weight: 600; color: #8e8e93;
-  letter-spacing: 0.5px; text-transform: uppercase;
-  padding: 8px 4px 2px;
-}
-.history-card {
-  background: #fff; border-radius: 14px; padding: 14px 14px 12px;
-  cursor: pointer; transition: opacity 0.15s;
-  border: 1px solid #efefef;
-  position: relative;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.history-card:active { opacity: 0.7; }
-.history-card-active { border-left: 3px solid #FFDD2D; padding-left: 12px; }
-.history-card-header {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  padding-right: 20px;
-}
-.history-card-topic { font-weight: 600; font-size: 16px; flex: 1; padding-right: 10px; line-height: 1.3; }
-.history-card-status {
-  font-size: 12px; padding: 3px 10px; border-radius: 8px;
-  font-weight: 500; white-space: nowrap; flex-shrink: 0;
-}
-.status-resolved { background: #e6f4ea; color: #1e7e34; }
-.status-closed { background: #f0f0f0; color: #666; }
-.status-active { background: #fff3e0; color: #d84f00; }
-.history-card-preview {
-  font-size: 14px; color: #555; line-height: 1.4;
-  display: -webkit-box; -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical; overflow: hidden;
-}
-.history-card-footer {
-  display: flex; justify-content: space-between; align-items: center; margin-top: 2px;
-}
-.history-card-date { font-size: 14px; color: #1a1a1a; font-weight: 500; }
-.history-card-operator { font-size: 12px; color: #aaa; }
-.history-card-chevron {
-  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-  color: #c7c7cc; font-size: 20px; font-weight: 300; line-height: 1;
-}
-
-/* Tooltip */
+/* === Tooltip === */
 .tooltip-overlay {
   display: none; position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -286,22 +348,22 @@ body {
 }
 .tooltip-overlay.show { display: flex; }
 .tooltip-box {
-  background: #fff; border-radius: 20px; padding: 24px; margin: 24px;
+  background: var(--c-bg); border-radius: 20px; padding: 24px; margin: 24px;
   max-width: 340px; text-align: center;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 }
 .tooltip-box h3 { font-size: 17px; margin-bottom: 8px; }
-.tooltip-box p { font-size: 14px; color: #666; margin-bottom: 16px; line-height: 1.5; }
+.tooltip-box p { font-size: var(--font-msg); color: var(--c-text-secondary); margin-bottom: 16px; line-height: 1.5; }
 .tooltip-btn {
-  background: #FFDD2D; border: none; border-radius: 14px;
-  padding: 12px 32px; font-size: 15px; font-weight: 600;
-  cursor: pointer; color: #1a1a1a;
+  background: var(--c-primary); border: none; border-radius: var(--radius-card);
+  padding: 12px 32px; font-size: var(--font-body); font-weight: 600;
+  cursor: pointer; color: var(--c-text);
 }
-.tooltip-btn:active { background: #e6c626; }
+.tooltip-btn:active { background: var(--c-primary-dark); }
 
 .prototype-label {
   position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
-  background: rgba(0,0,0,0.7); color: #fff; font-size: 11px;
+  background: rgba(0,0,0,0.7); color: #fff; font-size: var(--font-time);
   padding: 4px 12px; border-radius: 8px; z-index: 50;
   pointer-events: none; white-space: nowrap;
 }
@@ -333,239 +395,10 @@ body {
     </span>
   </div>
 
-  <div class="chat-body" id="chat-body">
-
-    <!-- 1. Кэшбэк — 18 апреля 2025 -->
-    <div class="date-marker" data-date="18 апреля 2025" id="marker-apr18"></div>
-
-    <div class="msg msg-user">
-      Здравствуйте, не начислили кэшбэк за покупку в Перекрёстке 15 апреля, 4 280 ₽. Категория «Супермаркеты» выбрана.
-      <div class="msg-time">11:03 ✓✓</div>
-    </div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Проверила: кэшбэк 214 ₽ начислен, но отобразится после закрытия расчётного периода 25 апреля. Всё в порядке!
-      <div class="msg-time">11:04</div>
-    </div>
-    <div class="msg msg-user">
-      Ааа, понял, спасибо
-      <div class="msg-time">11:05 ✓✓</div>
-    </div>
-
-    <!-- 2. Перевыпуск карты — 12 мая 2025 -->
-    <div class="date-marker" data-date="12 мая 2025" id="marker-may12"></div>
-
-    <div class="msg msg-user">
-      Карта Black истекает в июне, хочу перевыпустить. Можно с новым дизайном?
-      <div class="msg-time">14:22 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Дарья</div>
-      Константин, оформила перевыпуск карты с дизайном «Чёрная классика». Доставка на адрес из профиля, курьер свяжется в течение 3 рабочих дней.
-      <div class="msg-time">14:28</div>
-    </div>
-    <div class="msg msg-user">
-      Отлично, жду
-      <div class="msg-time">14:29 ✓✓</div>
-    </div>
-
-    <!-- 3. Страховка — 9 июня 2025 -->
-    <div class="date-marker" data-date="9 июня 2025" id="marker-jun9"></div>
-
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Вам остаётся оплатить страховку. Если понадобится поменять данные, напишите здесь — поможем разобраться.
-      <div class="msg-time">12:25</div>
-    </div>
-
-    <!-- 4. Блокировка за границей — 23 июля 2025 -->
-    <div class="date-marker" data-date="23 июля 2025" id="marker-jul23"></div>
-
-    <div class="msg msg-user">
-      Я в Турции, карта заблокировалась при оплате в ресторане. Разблокируйте пожалуйста, это я плачу
-      <div class="msg-time">21:47 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Михаил</div>
-      Константин, карту разблокировал. Блокировка сработала из-за нетипичной геолокации. Рекомендую перед поездкой включать «Я за границей» в настройках карты.
-      <div class="msg-time">21:50</div>
-    </div>
-    <div class="msg msg-user">
-      Спасибо! Не знал про эту настройку
-      <div class="msg-time">21:51 ✓✓</div>
-    </div>
-
-    <!-- 5. Ошибочный перевод — 14 августа 2025 -->
-    <div class="date-marker" data-date="14 августа 2025" id="marker-aug14"></div>
-
-    <div class="msg msg-user">
-      Перевёл 15 000 ₽ не тому человеку, ошибся в номере телефона. Можно вернуть?
-      <div class="msg-time">09:33 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Елена</div>
-      Отправила запрос получателю на возврат средств. Если получатель подтвердит — деньги вернутся в течение 5 рабочих дней. Если откажет — можно обратиться в полицию, мы предоставим выписку.
-      <div class="msg-time">09:41</div>
-    </div>
-    <div class="msg msg-user">
-      Понял, буду ждать. Если не вернут — напишу снова
-      <div class="msg-time">09:42 ✓✓</div>
-    </div>
-
-    <!-- 6. Отключение подписки — 5 сентября 2025 -->
-    <div class="date-marker" data-date="5 сентября 2025" id="marker-sep5"></div>
-
-    <div class="msg msg-user">
-      Как отключить подписку Pro? Не могу найти в настройках
-      <div class="msg-time">16:10 ✓✓</div>
-    </div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Чтобы отключить Т-Банк Pro: Профиль → Подписки → Т-Банк Pro → Отключить. Подписка останется активной до конца оплаченного периода.
-      <div class="msg-time">16:10</div>
-    </div>
-    <div class="msg msg-user">
-      Нашёл, спасибо!
-      <div class="msg-time">16:14 ✓✓</div>
-    </div>
-
-    <!-- 7. 115-ФЗ — 3 октября 2025 -->
-    <div class="date-marker" data-date="3 октября 2025" id="marker-oct3"></div>
-
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      По закону №115-ФЗ требуется обновить ваши данные. Обновите их сейчас с помощью Госуслуг. Это займёт несколько минут.
-      <div class="msg-time">18:29</div>
-    </div>
-
-    <!-- 8. Маршрутная квитанция — 21 октября 2025 -->
-    <div class="date-marker" data-date="21 октября 2025" id="marker-oct21"></div>
-
-    <div class="msg msg-operator">
-      <div class="msg-sender">Арси</div>
-      Здравствуйте, Константин! Мы отправили маршрутную квитанцию на английском языке по заказу 74SFM3 на контактную электронную почту, также дублируем в чате.
-      <div class="msg-time">17:31</div>
-    </div>
-    <div class="msg msg-user">
-      Спасибо
-      <div class="msg-time">17:47 ✓✓</div>
-    </div>
-
-    <!-- 9. Спорная операция — 18 ноября 2025 -->
-    <div class="date-marker" data-date="18 ноября 2025" id="marker-nov18"></div>
-
-    <div class="msg msg-user">
-      Списали 3 490 ₽ от «NETFLIX.COM», но я отменил подписку месяц назад. Это спорная операция.
-      <div class="msg-time">10:15 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Антон</div>
-      Оформил заявление на оспаривание (chargeback). Срок рассмотрения — до 30 рабочих дней. Если платёжная система подтвердит возврат, деньги вернутся на карту. Уведомим в чате.
-      <div class="msg-time">10:22</div>
-    </div>
-    <div class="msg msg-user">
-      Хорошо, спасибо
-      <div class="msg-time">10:23 ✓✓</div>
-    </div>
-
-    <!-- 10. Справка для визы — 9 декабря 2025 -->
-    <div class="date-marker" data-date="9 декабря 2025" id="marker-dec9"></div>
-
-    <div class="msg msg-user">
-      Нужна справка о доходах для визы в Шенген на английском. Можно получить?
-      <div class="msg-time">13:40 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Ксения</div>
-      Константин, справку на английском сформировала. Найдёте её в разделе Документы → Справки. Действительна 30 дней.
-      <div class="msg-time">13:48</div>
-    </div>
-    <div class="msg msg-user">
-      Быстро, спасибо!
-      <div class="msg-time">13:49 ✓✓</div>
-    </div>
-
-    <!-- 11. Apple Pay — 17 января 2026 -->
-    <div class="date-marker" data-date="17 января 2026" id="marker-jan17"></div>
-
-    <div class="msg msg-user">
-      Apple Pay перестал работать, при оплате пишет «Карта не поддерживается». Карта активна.
-      <div class="msg-time">08:55 ✓✓</div>
-    </div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Попробуйте: Настройки → Wallet → удалить карту → добавить заново. Если не поможет, напишите — переключу на специалиста.
-      <div class="msg-time">08:56</div>
-    </div>
-    <div class="msg msg-user">
-      Переадобавил, заработало. Спасибо
-      <div class="msg-time">09:10 ✓✓</div>
-    </div>
-
-    <!-- 12. Лимит переводов — 20 февраля 2026 -->
-    <div class="date-marker" data-date="20 февраля 2026" id="marker-feb20"></div>
-
-    <div class="msg msg-user">
-      Нужно перевести 300 000 ₽ за машину, но лимит 150 000 в день. Можно увеличить на сегодня?
-      <div class="msg-time">10:30 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Виктор</div>
-      Константин, временно увеличил суточный лимит переводов до 500 000 ₽ на 24 часа. После этого лимит вернётся к стандартному.
-      <div class="msg-time">10:36</div>
-    </div>
-    <div class="msg msg-user">
-      Перевёл, всё прошло. Спасибо!
-      <div class="msg-time">10:52 ✓✓</div>
-    </div>
-
-    <!-- 13. 161 ФЗ — 25 марта -->
-    <div class="date-marker" data-date="25 марта" id="marker-mar25"></div>
-
-    <div class="msg msg-user">
-      161 фз
-      <div class="msg-time">10:11 ✓✓</div>
-    </div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Пока не нашёл ответа. Что предлагаю:<br>🧑‍💼 Сразу позвать сотрудника<br>⚡ Попробовать ещё раз со мной
-      <div class="msg-time">10:11</div>
-    </div>
-    <div class="quick-action">Позови сотрудника</div>
-
-    <!-- 14. Блокировка реквизитов — 26 марта -->
-    <div class="date-marker" data-date="26 марта" id="marker-mar26"></div>
-
-    <div class="msg msg-user" style="max-width:90%; font-size:13px;">
-      23 марта мне ваш клиент отправил 100 000 рублей. Ваша служба безопасности приостановила перевод... В итоге деньги мне перевели и пометили мои реквизиты, хотя отправитель подтвердил вашей СБ что это обычный перевод, а не мошенничество.
-      <div class="msg-time">08:42 ✓✓</div>
-    </div>
-    <div class="msg msg-operator">
-      <div class="msg-sender">Артём</div>
-      Обращение передано, ожидайте результата до 18.04.2026 включительно.
-      <div class="msg-time">08:43</div>
-    </div>
-
-    <!-- Сегодня -->
-    <div class="date-marker" data-date="Сегодня" id="marker-today"></div>
-
-    <div class="quick-action" onclick="showMenu()" style="cursor:pointer;">Вопрос по обращению</div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      Чтобы проверить статус вашего обращения, перейдите в раздел <span class="msg-link" onclick="showHistory()" style="cursor:pointer;">«Обращения»</span>.
-      <div class="msg-time">00:44</div>
-    </div>
-    <div class="msg msg-bot">
-      <div class="msg-sender">Ассистент поддержки</div>
-      И вам здравствуйте! Что вы хотите узнать?
-      <div class="msg-time">00:49</div>
-    </div>
-  </div>
+  <div class="chat-body" id="chat-body"></div>
 
   <button class="scroll-btn" id="scroll-btn" onclick="scrollToBottom()">
-    <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 7l5 5 5-5" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+    <svg viewBox="0 0 18 18" fill="none"><path d="M4 7l5 5 5-5" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
 
   <div class="input-bar">
@@ -581,199 +414,10 @@ body {
     <button class="header-back" onclick="backToChat()">‹</button>
     <div class="header-info">
       <div class="header-title">История обращений</div>
-      <div class="header-subtitle">Все ваши обращения в поддержку</div>
+      <div class="header-subtitle" id="history-subtitle">Обращения</div>
     </div>
   </div>
-
-  <div class="history-body">
-
-    <div class="history-year-group">2026</div>
-
-    <div class="history-card history-card-active" onclick="goToMessage('marker-mar26')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Блокировка реквизитов</div>
-        <div class="history-card-status status-active">В работе</div>
-      </div>
-      <div class="history-card-preview">Обращение передано, ожидайте результата до 18.04.2026.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">26 марта 2026</span>
-        <span class="history-card-operator">Оператор: Артём</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-mar25')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Запрос по 161-ФЗ</div>
-        <div class="history-card-status status-closed">Закрыто</div>
-      </div>
-      <div class="history-card-preview">Бот не нашёл ответ, переключили на сотрудника.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">25 марта 2026</span>
-        <span class="history-card-operator">Ассистент → оператор</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-feb20')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Увеличение лимита переводов</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Временно увеличен суточный лимит до 500 000 ₽ на 24 часа.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">20 февраля 2026</span>
-        <span class="history-card-operator">Оператор: Виктор</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-jan17')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Apple Pay не работает</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Переадобавление карты в Wallet решило проблему.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">17 января 2026</span>
-        <span class="history-card-operator">Ассистент</span>
-      </div>
-    </div>
-
-    <div class="history-year-group">2025</div>
-
-    <div class="history-card" onclick="goToMessage('marker-dec9')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Справка для визы</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Справка о доходах на английском сформирована в разделе Документы.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">9 декабря 2025</span>
-        <span class="history-card-operator">Оператор: Ксения</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-nov18')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Спорная операция Netflix</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Оформлен chargeback на 3 490 ₽. Деньги возвращены.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">18 ноября 2025</span>
-        <span class="history-card-operator">Оператор: Антон</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-oct21')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Маршрутная квитанция</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Квитанция по заказу 74SFM3 отправлена на почту и в чат.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">21 октября 2025</span>
-        <span class="history-card-operator">Оператор: Арси</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-oct3')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Обновление данных (115-ФЗ)</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Данные обновлены через Госуслуги.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">3 октября 2025</span>
-        <span class="history-card-operator">Автоматически</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-sep5')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Отключение Т-Банк Pro</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Подписка отключена через Профиль → Подписки.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">5 сентября 2025</span>
-        <span class="history-card-operator">Ассистент</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-aug14')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Ошибочный перевод</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Запрос получателю на возврат 15 000 ₽. Средства возвращены.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">14 августа 2025</span>
-        <span class="history-card-operator">Оператор: Елена</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-jul23')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Блокировка карты за границей</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Карта разблокирована. Рекомендовано включить «Я за границей».</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">23 июля 2025</span>
-        <span class="history-card-operator">Оператор: Михаил</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-jun9')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Страховка — оплата</div>
-        <div class="history-card-status status-closed">Закрыто</div>
-      </div>
-      <div class="history-card-preview">Напоминание об оплате страховки.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">9 июня 2025</span>
-        <span class="history-card-operator">Автоматически</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-may12')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Перевыпуск карты Black</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Карта перевыпущена с дизайном «Чёрная классика», доставлена курьером.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">12 мая 2025</span>
-        <span class="history-card-operator">Оператор: Дарья</span>
-      </div>
-    </div>
-
-    <div class="history-card" onclick="goToMessage('marker-apr18')">
-      <span class="history-card-chevron">›</span>
-      <div class="history-card-header">
-        <div class="history-card-topic">Не начислен кэшбэк</div>
-        <div class="history-card-status status-resolved">Решено</div>
-      </div>
-      <div class="history-card-preview">Кэшбэк начислен, отобразится после закрытия расчётного периода.</div>
-      <div class="history-card-footer">
-        <span class="history-card-date">18 апреля 2025</span>
-        <span class="history-card-operator">Ассистент</span>
-      </div>
-    </div>
-
-  </div>
+  <div class="history-body" id="history-body"></div>
 </div>
 
 <!-- ===== TOOLTIP ===== -->
@@ -785,7 +429,7 @@ body {
   </div>
 </div>
 
-<!-- ===== BOTTOM SHEET: О чём хотите спросить ===== -->
+<!-- ===== BOTTOM SHEET ===== -->
 <div class="sheet-overlay" id="sheet-overlay" onclick="hideMenu()"></div>
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle"></div>
@@ -793,7 +437,7 @@ body {
   <div class="sheet-divider"></div>
   <div class="sheet-item" onclick="selectMenuItem()">
     <div class="sheet-item-icon">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 20 20" fill="none">
         <path d="M10 2C6.13 2 3 5.13 3 9c0 2.4 1.2 4.5 3 5.74V15a1 1 0 001 1h6a1 1 0 001-1v-.26C15.8 13.5 17 11.4 17 9c0-3.87-3.13-7-7-7z" fill="#4389FF" opacity="0.2"/>
         <path d="M10 2C6.13 2 3 5.13 3 9c0 2.4 1.2 4.5 3 5.74V15a1 1 0 001 1h6a1 1 0 001-1v-.26C15.8 13.5 17 11.4 17 9c0-3.87-3.13-7-7-7z" stroke="#4389FF" stroke-width="1.5"/>
         <circle cx="10" cy="9" r="2" fill="#4389FF"/>
@@ -823,132 +467,477 @@ body {
 <div class="prototype-label">Прототип · Нажмите на дату вверху чата</div>
 
 <script>
-// Заполняем видимые плашки дат текстом из data-date
-document.querySelectorAll('.date-marker').forEach(el => {
-  if (el.dataset.date) el.textContent = el.dataset.date;
-});
+/* ================================================================
+   DATA — все диалоги в одном массиве.
+   Чтобы добавить кейс, добавьте объект в CONVERSATIONS.
+   ================================================================ */
+const CONVERSATIONS = [
+  {
+    id: 'apr18', date: '18 апреля 2025', year: 2025,
+    topic: 'Не начислен кэшбэк', status: 'resolved',
+    preview: 'Кэшбэк начислен, отобразится после закрытия расчётного периода.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Здравствуйте, не начислили кэшбэк за покупку в Перекрёстке 15 апреля, 4 280 ₽. Категория «Супермаркеты» выбрана.', time: '11:03' },
+      { from: 'bot', text: 'Проверила: кэшбэк 214 ₽ начислен, но отобразится после закрытия расчётного периода 25 апреля. Всё в порядке!', time: '11:04' },
+      { from: 'user', text: 'Ааа, понял, спасибо', time: '11:05' },
+    ]
+  },
+  {
+    id: 'apr25', date: '25 апреля 2025', year: 2025,
+    topic: 'Пополнение не зачислилось', status: 'resolved',
+    preview: 'Перевод с Альфа-Банка зачислен с задержкой из-за технических работ.',
+    operator: 'Оператор: Ирина',
+    messages: [
+      { from: 'user', text: 'Вчера вечером перевёл 20 000 ₽ с Альфа-Банка, деньги ушли, но на счёт так и не пришли. Уже больше 12 часов.', time: '10:18' },
+      { from: 'operator', sender: 'Ирина', text: 'Константин, вижу перевод в обработке. Задержка связана с плановыми техническими работами на стороне банка-отправителя. Средства зачислятся в течение 3 рабочих часов. Извините за неудобство.', time: '10:24' },
+      { from: 'user', text: 'Пришли, спасибо что разобрались', time: '13:07' },
+    ]
+  },
+  {
+    id: 'may12', date: '12 мая 2025', year: 2025,
+    topic: 'Перевыпуск карты Black', status: 'resolved',
+    preview: 'Карта перевыпущена с дизайном «Чёрная классика», доставлена курьером.',
+    operator: 'Оператор: Дарья',
+    messages: [
+      { from: 'user', text: 'Карта Black истекает в июне, хочу перевыпустить. Можно с новым дизайном?', time: '14:22' },
+      { from: 'operator', sender: 'Дарья', text: 'Константин, оформила перевыпуск карты с дизайном «Чёрная классика». Доставка на адрес из профиля, курьер свяжется в течение 3 рабочих дней.', time: '14:28' },
+      { from: 'user', text: 'Отлично, жду', time: '14:29' },
+    ]
+  },
+  {
+    id: 'may28', date: '28 мая 2025', year: 2025,
+    topic: 'Двойное списание в магазине', status: 'resolved',
+    preview: 'Дубль 5 890 ₽ отменён, деньги вернутся в течение 3 рабочих дней.',
+    operator: 'Оператор: Наталья',
+    messages: [
+      { from: 'user', text: 'В Zara сегодня дважды списали 5 890 ₽. На кассе завис терминал, кассир попросил приложить карту ещё раз. В итоге два списания.', time: '17:44' },
+      { from: 'operator', sender: 'Наталья', text: 'Вижу оба платежа. Второе списание — дубль, оформила отмену. Деньги вернутся на карту в течение 3 рабочих дней. Если магазин обработает возврат раньше — придут быстрее.', time: '17:51' },
+      { from: 'user', text: 'Хорошо, спасибо', time: '17:52' },
+    ]
+  },
+  {
+    id: 'jun9', date: '9 июня 2025', year: 2025,
+    topic: 'Страховка — оплата', status: 'closed',
+    preview: 'Напоминание об оплате страховки.',
+    operator: 'Автоматически',
+    messages: [
+      { from: 'bot', text: 'Вам остаётся оплатить страховку. Если понадобится поменять данные, напишите здесь — поможем разобраться.', time: '12:25' },
+    ]
+  },
+  {
+    id: 'jun22', date: '22 июня 2025', year: 2025,
+    topic: 'Досрочное расторжение вклада', status: 'resolved',
+    preview: '37 200 ₽ возвращены на карту. Проценты пересчитаны по ставке «до востребования».',
+    operator: 'Оператор: Сергей',
+    messages: [
+      { from: 'user', text: 'Хочу досрочно закрыть вклад «Мой выбор», открыт в марте на 9 месяцев. Деньги нужны срочно. Какие проценты потеряю?', time: '12:05' },
+      { from: 'operator', sender: 'Сергей', text: 'Константин, при досрочном расторжении проценты пересчитаются по ставке «до востребования» — 0,1% годовых вместо 14,5%. Потеря составит около 1 860 ₽. Если подтверждаете — закрою вклад, 37 200 ₽ поступят на карту в течение минуты.', time: '12:11' },
+      { from: 'user', text: 'Да, закрывайте', time: '12:13' },
+      { from: 'operator', sender: 'Сергей', text: 'Вклад закрыт, деньги зачислены.', time: '12:13' },
+    ]
+  },
+  {
+    id: 'jul5', date: '5 июля 2025', year: 2025,
+    topic: 'Перевод СБП завис', status: 'resolved',
+    preview: 'Перевод 7 500 ₽ зачислен получателю. Задержка из-за нагрузки на систему.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Отправил 7 500 ₽ через СБП другу в Сбер, уже 2 часа статус «В обработке». Обычно приходит за секунды.', time: '19:22' },
+      { from: 'bot', text: 'Проверила: перевод завершён, деньги зачислены на счёт получателя в 19:15. Иногда статус в приложении обновляется с задержкой — обновите страницу истории операций.', time: '19:23' },
+      { from: 'user', text: 'Точно, обновил — всё показывает. Спасибо', time: '19:24' },
+    ]
+  },
+  {
+    id: 'jul23', date: '23 июля 2025', year: 2025,
+    topic: 'Блокировка карты за границей', status: 'resolved',
+    preview: 'Карта разблокирована. Рекомендовано включить «Я за границей».',
+    operator: 'Оператор: Михаил',
+    messages: [
+      { from: 'user', text: 'Я в Турции, карта заблокировалась при оплате в ресторане. Разблокируйте пожалуйста, это я плачу', time: '21:47' },
+      { from: 'operator', sender: 'Михаил', text: 'Константин, карту разблокировал. Блокировка сработала из-за нетипичной геолокации. Рекомендую перед поездкой включать «Я за границей» в настройках карты.', time: '21:50' },
+      { from: 'user', text: 'Спасибо! Не знал про эту настройку', time: '21:51' },
+    ]
+  },
+  {
+    id: 'aug3', date: '3 августа 2025', year: 2025,
+    topic: 'Смена номера телефона', status: 'resolved',
+    preview: 'Номер изменён после верификации через офис. Новый номер +7 (916) активен.',
+    operator: 'Оператор: Анастасия',
+    messages: [
+      { from: 'user', text: 'Сменил оператора, старый номер +7 (925) больше не работает. Хочу привязать новый +7 (916). Как это сделать удалённо?', time: '14:33' },
+      { from: 'operator', sender: 'Анастасия', text: 'Константин, смена номера при недоступности старого требует верификации личности. Варианта два: визит в офис с паспортом или видеозвонок с паспортом через приложение. Какой удобнее?', time: '14:40' },
+      { from: 'user', text: 'Видеозвонок', time: '14:41' },
+      { from: 'operator', sender: 'Анастасия', text: 'Направила запрос на видеозвонок, специалист свяжется в течение 15 минут. После верификации номер сменят сразу.', time: '14:42' },
+    ]
+  },
+  {
+    id: 'aug14', date: '14 августа 2025', year: 2025,
+    topic: 'Ошибочный перевод', status: 'resolved',
+    preview: 'Запрос получателю на возврат 15 000 ₽. Средства возвращены.',
+    operator: 'Оператор: Елена',
+    messages: [
+      { from: 'user', text: 'Перевёл 15 000 ₽ не тому человеку, ошибся в номере телефона. Можно вернуть?', time: '09:33' },
+      { from: 'operator', sender: 'Елена', text: 'Отправила запрос получателю на возврат средств. Если получатель подтвердит — деньги вернутся в течение 5 рабочих дней. Если откажет — можно обратиться в полицию, мы предоставим выписку.', time: '09:41' },
+      { from: 'user', text: 'Понял, буду ждать. Если не вернут — напишу снова', time: '09:42' },
+    ]
+  },
+  {
+    id: 'aug30', date: '30 августа 2025', year: 2025,
+    topic: 'Не приходит СМС с кодом', status: 'resolved',
+    preview: 'Вход восстановлен через Push-код в приложении. СМС-проблема на стороне оператора.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'При входе в приложение запрашивает код из СМС, но СМС не приходит уже 20 минут. Пробовал несколько раз — ничего.', time: '09:02' },
+      { from: 'bot', text: 'Возможные причины: задержка у мобильного оператора или нет сети. Попробуйте войти через Push-уведомление вместо СМС — нажмите «Другой способ входа» на экране ввода кода. Если Push тоже не приходит — напишите, переключу на специалиста.', time: '09:03' },
+      { from: 'user', text: 'Через Push сработало, вошёл. Спасибо', time: '09:06' },
+    ]
+  },
+  {
+    id: 'sep5', date: '5 сентября 2025', year: 2025,
+    topic: 'Отключение Т-Банк Pro', status: 'resolved',
+    preview: 'Подписка отключена через Профиль → Подписки.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Как отключить подписку Pro? Не могу найти в настройках', time: '16:10' },
+      { from: 'bot', text: 'Чтобы отключить Т-Банк Pro: Профиль → Подписки → Т-Банк Pro → Отключить. Подписка останется активной до конца оплаченного периода.', time: '16:10' },
+      { from: 'user', text: 'Нашёл, спасибо!', time: '16:14' },
+    ]
+  },
+  {
+    id: 'sep18', date: '18 сентября 2025', year: 2025,
+    topic: 'Карта не привязывается в Яндекс Go', status: 'resolved',
+    preview: 'Карта добавлена после отключения 3D Secure для токенизации. Яндекс Go работает.',
+    operator: 'Оператор: Павел',
+    messages: [
+      { from: 'user', text: 'Пытаюсь добавить карту Black в Яндекс Go, но при подтверждении выдаёт ошибку «Не удалось добавить карту». Карта рабочая, в других приложениях работает.', time: '21:15' },
+      { from: 'operator', sender: 'Павел', text: 'Константин, проблема в настройках 3D Secure для сторонних сервисов. Временно снял ограничение на токенизацию — попробуйте добавить карту сейчас. После добавления настройку верну обратно.', time: '21:20' },
+      { from: 'user', text: 'Добавилась! Спасибо', time: '21:28' },
+    ]
+  },
+  {
+    id: 'oct3', date: '3 октября 2025', year: 2025,
+    topic: 'Обновление данных (115-ФЗ)', status: 'resolved',
+    preview: 'Данные обновлены через Госуслуги.',
+    operator: 'Автоматически',
+    messages: [
+      { from: 'bot', text: 'По закону №115-ФЗ требуется обновить ваши данные. Обновите их сейчас с помощью Госуслуг. Это займёт несколько минут.', time: '18:29' },
+    ]
+  },
+  {
+    id: 'oct10', date: '10 октября 2025', year: 2025,
+    topic: 'Справка об остатке по кредиту', status: 'resolved',
+    preview: 'Справка с остатком долга 487 320 ₽ сформирована в разделе Документы.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Подаю заявку на рефинансирование в другой банк, требуют справку об остатке задолженности по кредиту. Как получить?', time: '11:50' },
+      { from: 'bot', text: 'Справку можно сформировать в приложении: раздел Кредиты → выберите кредит → «Документы» → «Справка об остатке задолженности». Готова мгновенно, действительна 30 дней. Хотите, чтобы я сформировала сейчас?', time: '11:50' },
+      { from: 'user', text: 'Да, пожалуйста', time: '11:51' },
+      { from: 'bot', text: 'Справка сформирована. Остаток по кредиту на сегодня — 487 320 ₽. Найдёте в разделе Документы → Справки.', time: '11:51' },
+    ]
+  },
+  {
+    id: 'oct21', date: '21 октября 2025', year: 2025,
+    topic: 'Маршрутная квитанция', status: 'resolved',
+    preview: 'Квитанция по заказу 74SFM3 отправлена на почту и в чат.',
+    operator: 'Оператор: Арси',
+    messages: [
+      { from: 'operator', sender: 'Арси', text: 'Здравствуйте, Константин! Мы отправили маршрутную квитанцию на английском языке по заказу 74SFM3 на контактную электронную почту, также дублируем в чате.', time: '17:31' },
+      { from: 'user', text: 'Спасибо', time: '17:47' },
+    ]
+  },
+  {
+    id: 'nov2', date: '2 ноября 2025', year: 2025,
+    topic: 'Не пришёл купон по ОФЗ', status: 'resolved',
+    preview: 'Купон 1 284 ₽ зачислен. Плановая дата выплаты — 31 октября, обработка до 3 рабочих дней.',
+    operator: 'Оператор: Роман',
+    messages: [
+      { from: 'user', text: 'По ОФЗ-26229 купонная выплата должна была прийти 31 октября. Сегодня 2 ноября — на брокерском счёте ничего нет. Это нормально?', time: '16:30' },
+      { from: 'operator', sender: 'Роман', text: 'Константин, купонные выплаты по ОФЗ зачисляются до 3 рабочих дней после даты выплаты. 31 октября — пятница, с учётом выходных зачисление идёт до сегодня. Проверил ваш счёт: купон 1 284 ₽ уже в обработке, отразится в приложении в течение часа.', time: '16:38' },
+      { from: 'user', text: 'Пришёл, спасибо за пояснение', time: '17:15' },
+    ]
+  },
+  {
+    id: 'nov18', date: '18 ноября 2025', year: 2025,
+    topic: 'Спорная операция Netflix', status: 'resolved',
+    preview: 'Оформлен chargeback на 3 490 ₽. Деньги возвращены.',
+    operator: 'Оператор: Антон',
+    messages: [
+      { from: 'user', text: 'Списали 3 490 ₽ от «NETFLIX.COM», но я отменил подписку месяц назад. Это спорная операция.', time: '10:15' },
+      { from: 'operator', sender: 'Антон', text: 'Оформил заявление на оспаривание (chargeback). Срок рассмотрения — до 30 рабочих дней. Если платёжная система подтвердит возврат, деньги вернутся на карту. Уведомим в чате.', time: '10:22' },
+      { from: 'user', text: 'Хорошо, спасибо', time: '10:23' },
+    ]
+  },
+  {
+    id: 'nov30', date: '30 ноября 2025', year: 2025,
+    topic: 'Платёж ЖКХ завис', status: 'resolved',
+    preview: 'Платёж 8 200 ₽ проведён. Задержка из-за технических работ в ГИС ЖКХ.',
+    operator: 'Оператор: Татьяна',
+    messages: [
+      { from: 'user', text: 'Оплатил квартплату 8 200 ₽ три дня назад, статус «В обработке». Управляющая компания говорит, что денег не видит. Что происходит?', time: '10:55' },
+      { from: 'operator', sender: 'Татьяна', text: 'Константин, платёж прошёл на нашей стороне 27 ноября. Задержка зачисления на стороне ГИС ЖКХ — там были технические работы. По данным системы, средства зачислены управляющей компании сегодня. Попросите УК проверить повторно.', time: '11:04' },
+      { from: 'user', text: 'Подтвердили, всё ок. Спасибо', time: '14:30' },
+    ]
+  },
+  {
+    id: 'dec9', date: '9 декабря 2025', year: 2025,
+    topic: 'Справка для визы', status: 'resolved',
+    preview: 'Справка о доходах на английском сформирована в разделе Документы.',
+    operator: 'Оператор: Ксения',
+    messages: [
+      { from: 'user', text: 'Нужна справка о доходах для визы в Шенген на английском. Можно получить?', time: '13:40' },
+      { from: 'operator', sender: 'Ксения', text: 'Константин, справку на английском сформировала. Найдёте её в разделе Документы → Справки. Действительна 30 дней.', time: '13:48' },
+      { from: 'user', text: 'Быстро, спасибо!', time: '13:49' },
+    ]
+  },
+  {
+    id: 'dec27', date: '27 декабря 2025', year: 2025,
+    topic: 'Не пришли дивиденды Сбер', status: 'resolved',
+    preview: 'Дивиденды 2 640 ₽ зачислены. Налог 13% удержан автоматически.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Дивиденды по акциям Сбербанка должны были прийти 20 декабря. До сих пор ничего. Акции на брокерском счёте в Т-Инвестициях.', time: '09:40' },
+      { from: 'bot', text: 'Проверила: дивиденды 2 640 ₽ зачислены 26 декабря. С выплаты удержан НДФЛ 13% (393 ₽) — это стандартная процедура, Т-Банк является налоговым агентом. Итого на счёт поступило 2 247 ₽. История пополнений — в разделе Брокераж → Операции.', time: '09:41' },
+      { from: 'user', text: 'Вижу, спасибо. Просто не заметил сразу', time: '09:45' },
+    ]
+  },
+  {
+    id: 'jan17', date: '17 января 2026', year: 2026,
+    topic: 'Apple Pay не работает', status: 'resolved',
+    preview: 'Удаление и повторное добавление карты в Wallet решило проблему.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Apple Pay перестал работать, при оплате пишет «Карта не поддерживается». Карта активна.', time: '08:55' },
+      { from: 'bot', text: 'Попробуйте: Настройки → Wallet → удалить карту → добавить заново. Если не поможет, напишите — переключу на специалиста.', time: '08:56' },
+      { from: 'user', text: 'Удалил и добавил заново — заработало. Спасибо', time: '09:10' },
+    ]
+  },
+  {
+    id: 'jan30', date: '30 января 2026', year: 2026,
+    topic: 'Возврат от Ozon не пришёл', status: 'resolved',
+    preview: 'Возврат 12 490 ₽ зачислен после эскалации запроса в Ozon.',
+    operator: 'Оператор: Людмила',
+    messages: [
+      { from: 'user', text: 'Вернул пылесос на Ozon 14 января, магазин подтвердил возврат, но деньги 12 490 ₽ на карту так и не пришли — уже 16 дней.', time: '13:22' },
+      { from: 'operator', sender: 'Людмила', text: 'Константин, по нашей стороне запроса на возврат не поступало — это значит, Ozon ещё не инициировал перевод. Рекомендую обратиться в поддержку Ozon с номером заявки на возврат. Если в течение 3 дней не решится — возвращайтесь, оформим претензию.', time: '13:30' },
+      { from: 'user', text: 'Написал в Ozon, через день деньги пришли. Спасибо за подсказку', time: '16:15' },
+    ]
+  },
+  {
+    id: 'feb7', date: '7 февраля 2026', year: 2026,
+    topic: 'Неверная категория кэшбэка', status: 'resolved',
+    preview: 'Покупка в «Детском мире» переотнесена в категорию «Дети». Кэшбэк пересчитан.',
+    operator: 'Оператор: Алексей',
+    messages: [
+      { from: 'user', text: 'Выбрал кэшбэк-категорию «Дети» на февраль. Купил в «Детском мире» на 6 300 ₽, но операция отнесена к «Прочее» — кэшбэк 1%, а должен быть 5%.', time: '18:10' },
+      { from: 'operator', sender: 'Алексей', text: 'Константин, конкретный терминал «Детского мира», через который прошла оплата, по MCC-коду попал в категорию «Прочее». Это редкая ситуация. Зафиксировал обращение, кэшбэк пересчитают по ставке 5% — разница 252 ₽ придёт в течение 3 рабочих дней.', time: '18:19' },
+      { from: 'user', text: 'Отлично, спасибо что разобрались', time: '18:20' },
+    ]
+  },
+  {
+    id: 'feb20', date: '20 февраля 2026', year: 2026,
+    topic: 'Увеличение лимита переводов', status: 'resolved',
+    preview: 'Временно увеличен суточный лимит до 500 000 ₽ на 24 часа.',
+    operator: 'Оператор: Виктор',
+    messages: [
+      { from: 'user', text: 'Нужно перевести 300 000 ₽ за машину, но лимит 150 000 в день. Можно увеличить на сегодня?', time: '10:30' },
+      { from: 'operator', sender: 'Виктор', text: 'Константин, временно увеличил суточный лимит переводов до 500 000 ₽ на 24 часа. После этого лимит вернётся к стандартному.', time: '10:36' },
+      { from: 'user', text: 'Перевёл, всё прошло. Спасибо!', time: '10:52' },
+    ]
+  },
+  {
+    id: 'feb28', date: '28 февраля 2026', year: 2026,
+    topic: 'Справка 2-НДФЛ по брокерскому счёту', status: 'resolved',
+    preview: 'Справка 2-НДФЛ за 2025 год сформирована в разделе Т-Инвестиции → Документы.',
+    operator: 'Ассистент',
+    messages: [
+      { from: 'user', text: 'Нужна справка 2-НДФЛ по брокерскому счёту за 2025 год для налогового вычета. Где её получить?', time: '11:05' },
+      { from: 'bot', text: 'Справка 2-НДФЛ за прошлый год доступна в приложении с февраля: Т-Инвестиции → Ещё → Документы → Налоговые документы → 2025 год. Там же найдёте отчёт брокера — он нужен для самостоятельного расчёта вычета. Если документов ещё нет — появятся до 1 марта.', time: '11:06' },
+      { from: 'user', text: 'Нашёл, всё есть. Спасибо', time: '11:09' },
+    ]
+  },
+  {
+    id: 'mar10', date: '10 марта 2026', year: 2026,
+    topic: 'Вход после смены телефона', status: 'resolved',
+    preview: 'Сессия восстановлена через видеозвонок. Приложение работает на новом iPhone.',
+    operator: 'Оператор: Дмитрий',
+    messages: [
+      { from: 'user', text: 'Купил новый iPhone 16, перенёс данные через iCloud. Приложение Т-Банк запрашивает подтверждение, но код не приходит — видимо, телефон считается новым устройством.', time: '15:45' },
+      { from: 'operator', sender: 'Дмитрий', text: 'Константин, при переносе на новое устройство требуется повторная привязка из соображений безопасности. Проведём верификацию через видеозвонок — это займёт около 3 минут. Удобно сейчас?', time: '15:50' },
+      { from: 'user', text: 'Да', time: '15:51' },
+      { from: 'operator', sender: 'Дмитрий', text: 'Верификация пройдена, устройство привязано. Войдите в приложение — должно пустить без проблем.', time: '15:54' },
+      { from: 'user', text: 'Вошёл, всё ок. Спасибо', time: '15:55' },
+    ]
+  },
+  {
+    id: 'mar25', date: '25 марта', year: 2026,
+    topic: 'Запрос по 161-ФЗ', status: 'closed',
+    preview: 'Бот не нашёл ответ, переключили на сотрудника.',
+    operator: 'Ассистент → оператор',
+    messages: [
+      { from: 'user', text: '161 фз', time: '10:11' },
+      { from: 'bot', text: 'Пока не нашёл ответа. Что предлагаю:<br>🧑‍💼 Сразу позвать сотрудника<br>⚡ Попробовать ещё раз со мной', time: '10:11' },
+      { from: 'action', text: 'Позови сотрудника' },
+    ]
+  },
+  {
+    id: 'mar26', date: '26 марта', year: 2026,
+    topic: 'Блокировка реквизитов', status: 'active',
+    preview: 'Обращение передано, ожидайте результата до 18.04.2026.',
+    operator: 'Оператор: Артём',
+    messages: [
+      { from: 'user', text: '23 марта мне ваш клиент отправил 100 000 рублей. Ваша служба безопасности приостановила перевод... В итоге деньги мне перевели и пометили мои реквизиты, хотя отправитель подтвердил вашей СБ что это обычный перевод, а не мошенничество.', time: '08:42', long: true },
+      { from: 'operator', sender: 'Артём', text: 'Обращение передано, ожидайте результата до 18.04.2026 включительно.', time: '08:43' },
+    ]
+  },
+  {
+    id: 'today', date: 'Сегодня', year: null,
+    topic: null, status: null, preview: null, operator: null,
+    messages: [
+      { from: 'action', text: 'Вопрос по обращению', onclick: 'showMenu' },
+      { from: 'bot', text: 'Чтобы проверить статус вашего обращения, перейдите в раздел <span class="msg-link" onclick="showHistory()" style="cursor:pointer;">«Обращения»</span>.', time: '00:44' },
+      { from: 'bot', text: 'И вам здравствуйте! Что вы хотите узнать?', time: '00:49' },
+    ]
+  },
+];
 
-// Добавляем аватары к сообщениям бота и операторов
-document.querySelectorAll('.msg-bot, .msg-operator').forEach(msg => {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'msg-row';
-  msg.parentNode.insertBefore(wrapper, msg);
-  wrapper.appendChild(msg);
+/* ================================================================
+   SVG-шаблоны
+   ================================================================ */
+const SVG_DOUBLE_CHECK = '<svg class="msg-check" viewBox="0 0 16 11" width="16" height="11"><path d="M1.5 5.5L4.5 8.5L11 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 5.5L8 8.5L14.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
+/* ================================================================
+   RENDER — генерация чата и истории из данных
+   ================================================================ */
+function renderChat() {
+  const container = document.getElementById('chat-body');
+  let html = '';
 
-  if (msg.classList.contains('msg-bot')) {
-    const img = document.createElement('img');
-    img.src = 'icons/logo.png';
-    img.alt = 'Т';
-    avatar.appendChild(img);
-  } else {
-    const senderEl = msg.querySelector('.msg-sender');
-    const name = senderEl ? senderEl.textContent.trim() : '?';
-    avatar.textContent = name[0];
-    avatar.classList.add('msg-avatar-operator');
+  for (const conv of CONVERSATIONS) {
+    // Маркер даты
+    html += `<div class="date-marker" data-date="${conv.date}" id="marker-${conv.id}">${conv.date}</div>`;
+
+    for (const msg of conv.messages) {
+      html += renderMessage(msg);
+    }
   }
 
-  wrapper.insertBefore(avatar, msg);
-});
+  container.innerHTML = html;
+}
 
-// Bottom sheet — автовыезд при загрузке (имитация открытия чата)
-window.addEventListener('load', () => {
-  setTimeout(showMenu, 600);
-});
+function renderMessage(msg) {
+  if (msg.from === 'user') {
+    const longClass = msg.long ? ' msg-long' : '';
+    return `<div class="msg msg-user${longClass}">
+      ${msg.text}
+      <div class="msg-time">${msg.time} ${SVG_DOUBLE_CHECK}</div>
+    </div>`;
+  }
 
+  if (msg.from === 'bot') {
+    return `<div class="msg-row">
+      <div class="msg-avatar"><img src="icons/logo.png" alt="Т"></div>
+      <div class="msg msg-bot">
+        <div class="msg-sender">Ассистент поддержки</div>
+        ${msg.text}
+        <div class="msg-time">${msg.time}</div>
+      </div>
+    </div>`;
+  }
+
+  if (msg.from === 'operator') {
+    const initial = msg.sender ? msg.sender[0] : '?';
+    return `<div class="msg-row">
+      <div class="msg-avatar msg-avatar-operator">${initial}</div>
+      <div class="msg msg-operator">
+        <div class="msg-sender">${msg.sender}</div>
+        ${msg.text}
+        <div class="msg-time">${msg.time}</div>
+      </div>
+    </div>`;
+  }
+
+  if (msg.from === 'action') {
+    const clickAttr = msg.onclick ? ` data-click="1" onclick="${msg.onclick}()"` : '';
+    return `<div class="quick-action"${clickAttr}>${msg.text}</div>`;
+  }
+
+  return '';
+}
+
+function pluralObr(n) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'обращение';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'обращения';
+  return 'обращений';
+}
+
+function renderHistory() {
+  const container = document.getElementById('history-body');
+  let html = '';
+  let currentYear = null;
+
+  // Карточки в обратном порядке (новые сверху), пропускаем «Сегодня»
+  const cards = CONVERSATIONS.filter(c => c.topic !== null).slice().reverse();
+
+  const subtitle = document.getElementById('history-subtitle');
+  if (subtitle) subtitle.textContent = cards.length + ' ' + pluralObr(cards.length);
+
+  for (const conv of cards) {
+    if (conv.year !== currentYear) {
+      currentYear = conv.year;
+      html += `<div class="history-year-group">${currentYear}</div>`;
+    }
+
+    const statusClass = conv.status === 'resolved' ? 'status-resolved'
+      : conv.status === 'active' ? 'status-active' : 'status-closed';
+    const statusLabel = conv.status === 'resolved' ? 'Решено'
+      : conv.status === 'active' ? 'В работе' : 'Закрыто';
+    const activeClass = conv.status === 'active' ? ' history-card-active' : '';
+
+    html += `<div class="history-card${activeClass}" onclick="goToMessage('marker-${conv.id}')">
+      <div class="history-card-content">
+        <div class="history-card-header">
+          <div class="history-card-topic">${conv.topic}</div>
+          <div class="history-card-status ${statusClass}">${statusLabel}</div>
+        </div>
+        <div class="history-card-preview">${conv.preview}</div>
+        <div class="history-card-footer">
+          <span class="history-card-date">${conv.date}${conv.year && !conv.date.includes('20') ? ' ' + conv.year : ''}</span>
+          <span class="history-card-dot">·</span>
+          <span class="history-card-operator">${conv.operator}</span>
+        </div>
+      </div>
+      <span class="history-card-chevron">›</span>
+    </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+/* ================================================================
+   UI HANDLERS
+   ================================================================ */
 function showMenu() {
   document.getElementById('sheet-overlay').classList.add('show');
   document.getElementById('bottom-sheet').classList.add('show');
 }
+
 function hideMenu() {
   document.getElementById('sheet-overlay').classList.remove('show');
   document.getElementById('bottom-sheet').classList.remove('show');
-  // Показываем тултип о новой функции после закрытия шторки
   setTimeout(() => {
     document.getElementById('tooltip').classList.add('show');
   }, 500);
 }
 
-// Свайп для закрытия/открытия шторки
-(function() {
-  const sheet = document.getElementById('bottom-sheet');
-  let startY = 0, currentY = 0, isDragging = false;
-
-  sheet.addEventListener('touchstart', e => {
-    startY = e.touches[0].clientY;
-    currentY = startY;
-    isDragging = true;
-    sheet.style.transition = 'none';
-  }, { passive: true });
-
-  sheet.addEventListener('touchmove', e => {
-    if (!isDragging) return;
-    currentY = e.touches[0].clientY;
-    const dy = currentY - startY;
-    if (dy > 0) {
-      sheet.style.transform = `translateX(-50%) translateY(${dy}px)`;
-    }
-  }, { passive: true });
-
-  sheet.addEventListener('touchend', () => {
-    isDragging = false;
-    sheet.style.transition = '';
-    const dy = currentY - startY;
-    if (dy > 80) {
-      hideMenu();
-      sheet.style.transform = '';
-    } else {
-      sheet.style.transform = 'translateX(-50%) translateY(0)';
-    }
-  });
-})();
 function selectMenuItem() {
   hideMenu();
-  // Скроллим к сообщению бота с ответом про обращения
   setTimeout(() => {
     const el = document.getElementById('marker-today');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 300);
 }
-
-const chatBody = document.getElementById('chat-body');
-const stickyText = document.getElementById('sticky-date-text');
-const markers = chatBody.querySelectorAll('.date-marker');
-const scrollBtn = document.getElementById('scroll-btn');
-
-const SCROLL_THRESHOLD = 120; // px от низа — показываем кнопку
-
-function updateScrollBtn() {
-  const distFromBottom = chatBody.scrollHeight - chatBody.scrollTop - chatBody.clientHeight;
-  if (distFromBottom > SCROLL_THRESHOLD) {
-    scrollBtn.classList.add('visible');
-  } else {
-    scrollBtn.classList.remove('visible');
-  }
-}
-
-function scrollToBottom() {
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
-}
-
-chatBody.addEventListener('scroll', () => {
-  const chatTop = chatBody.getBoundingClientRect().top;
-  let currentDate = '';
-  markers.forEach(marker => {
-    const rect = marker.getBoundingClientRect();
-    if (rect.top <= chatTop + 40) {
-      currentDate = marker.dataset.date;
-    }
-  });
-  if (currentDate) stickyText.textContent = currentDate;
-  updateScrollBtn();
-});
-
-window.addEventListener('load', () => {
-  chatBody.scrollTop = chatBody.scrollHeight;
-});
 
 function closeTooltip() {
   document.getElementById('tooltip').classList.remove('show');
@@ -971,17 +960,103 @@ function goToMessage(markerId) {
 
   setTimeout(() => {
     const marker = document.getElementById(markerId);
-    if (marker) {
-      marker.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      const next = marker.nextElementSibling;
-      if (next && next.classList.contains('msg')) {
-        next.style.transition = 'box-shadow 0.3s';
-        next.style.boxShadow = '0 0 0 3px rgba(255,221,45,0.5)';
-        setTimeout(() => { next.style.boxShadow = 'none'; }, 2000);
-      }
+    if (!marker) return;
+    marker.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Подсветка первого сообщения после маркера
+    const next = marker.nextElementSibling;
+    const target = next && (next.classList.contains('msg') || next.classList.contains('msg-row'))
+      ? next : null;
+    if (target) {
+      target.style.transition = 'box-shadow 0.3s';
+      target.style.boxShadow = '0 0 0 3px rgba(255,221,45,0.5)';
+      setTimeout(() => { target.style.boxShadow = 'none'; }, 2000);
     }
   }, 350);
 }
+
+/* Scroll to bottom button */
+const SCROLL_THRESHOLD = 120;
+
+function updateScrollBtn() {
+  const chatBody = document.getElementById('chat-body');
+  const scrollBtn = document.getElementById('scroll-btn');
+  const distFromBottom = chatBody.scrollHeight - chatBody.scrollTop - chatBody.clientHeight;
+  scrollBtn.classList.toggle('visible', distFromBottom > SCROLL_THRESHOLD);
+}
+
+function scrollToBottom() {
+  const chatBody = document.getElementById('chat-body');
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+}
+
+/* Sticky date update on scroll */
+function initStickyDate() {
+  const chatBody = document.getElementById('chat-body');
+  const stickyText = document.getElementById('sticky-date-text');
+
+  chatBody.addEventListener('scroll', () => {
+    const chatTop = chatBody.getBoundingClientRect().top;
+    const markers = chatBody.querySelectorAll('.date-marker');
+    let currentDate = '';
+    markers.forEach(marker => {
+      if (marker.getBoundingClientRect().top <= chatTop + 40) {
+        currentDate = marker.dataset.date;
+      }
+    });
+    if (currentDate) stickyText.textContent = currentDate;
+    updateScrollBtn();
+  });
+}
+
+/* Bottom sheet swipe */
+function initSheetSwipe() {
+  const sheet = document.getElementById('bottom-sheet');
+  let startY = 0, currentY = 0, isDragging = false;
+
+  sheet.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    currentY = startY;
+    isDragging = true;
+    sheet.style.transition = 'none';
+  }, { passive: true });
+
+  sheet.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const dy = currentY - startY;
+    if (dy > 0) sheet.style.transform = `translateX(-50%) translateY(${dy}px)`;
+  }, { passive: true });
+
+  sheet.addEventListener('touchend', () => {
+    isDragging = false;
+    sheet.style.transition = '';
+    const dy = currentY - startY;
+    if (dy > 80) {
+      hideMenu();
+      sheet.style.transform = '';
+    } else {
+      sheet.style.transform = 'translateX(-50%) translateY(0)';
+    }
+  });
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+function init() {
+  renderChat();
+  renderHistory();
+  initStickyDate();
+  initSheetSwipe();
+
+  const chatBody = document.getElementById('chat-body');
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  setTimeout(showMenu, 600);
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 
 </body>
