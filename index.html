@@ -390,7 +390,7 @@ body {
   </div>
 
   <div class="sticky-date-wrap">
-    <span class="sticky-date hint-pulse" id="sticky-date" onclick="showHistory()">
+    <span class="sticky-date" id="sticky-date" onclick="showHistory()">
       <span id="sticky-date-text">Сегодня</span><span class="sticky-date-icon">▼</span>
     </span>
   </div>
@@ -421,7 +421,7 @@ body {
 </div>
 
 <!-- ===== TOOLTIP ===== -->
-<div class="tooltip-overlay" id="tooltip" onclick="closeTooltip()">
+<div class="tooltip-overlay" id="tooltip">
   <div class="tooltip-box animate-in" onclick="event.stopPropagation()">
     <h3>Новая функция</h3>
     <p>Нажмите на плашку с датой вверху чата, чтобы открыть историю всех обращений — включая закрытые.</p>
@@ -450,17 +450,17 @@ body {
     <span class="sheet-chevron">›</span>
   </div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Не отображается рассрочка в кабинете</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Не отображается рассрочка в кабинете</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Отменить операцию</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Отменить операцию</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Поменять личные данные</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Поменять личные данные</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Получить карту</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Получить карту</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Статус страхового случая</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Статус страхового случая</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-divider"></div>
-  <div class="sheet-row"><span>Плата за обслуживание</span><span class="sheet-chevron">›</span></div>
+  <div class="sheet-row" onclick="hideMenu()"><span>Плата за обслуживание</span><span class="sheet-chevron">›</span></div>
   <div class="sheet-bottom-pad"></div>
 </div>
 
@@ -928,7 +928,8 @@ function hideMenu() {
   document.getElementById('bottom-sheet').classList.remove('show');
   setTimeout(() => {
     document.getElementById('tooltip').classList.add('show');
-  }, 500);
+    document.getElementById('sticky-date').classList.add('hint-pulse');
+  }, 400);
 }
 
 function selectMenuItem() {
@@ -1035,7 +1036,7 @@ function initSheetSwipe() {
     if (dy > 80) {
       hideMenu();
       sheet.style.transform = '';
-    } else {
+    } else if (dy > 5) {
       sheet.style.transform = 'translateX(-50%) translateY(0)';
     }
   });
