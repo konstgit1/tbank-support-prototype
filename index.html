@@ -153,12 +153,16 @@ body {
   font-size: var(--font-msg); line-height: 1.45;
   position: relative; word-wrap: break-word;
 }
-.msg-time {
-  font-size: var(--font-time); color: var(--c-text-muted);
-  margin-top: 2px;
-  display: flex; align-items: center; gap: 3px;
+.msg-time-pad {
+  display: inline-block; width: 54px; height: 16px; vertical-align: bottom;
 }
-.msg-user .msg-time { justify-content: flex-end; }
+.msg-user .msg-time-pad, .quick-action .msg-time-pad { width: 70px; }
+.msg-time {
+  position: absolute; bottom: 6px; right: 10px;
+  font-size: var(--font-time); color: var(--c-text-muted);
+  display: inline-flex; align-items: center; gap: 3px;
+  line-height: 1; white-space: nowrap;
+}
 .msg-check {
   display: inline-block; vertical-align: middle;
   width: 16px; height: 11px; flex-shrink: 0;
@@ -199,11 +203,14 @@ body {
 
 /* Quick action */
 .quick-action {
-  display: inline-block; background: var(--c-bg-msg); border: none;
+  display: inline-block; background: var(--c-blue); border: none;
   border-radius: 20px; padding: 8px 18px; font-size: var(--font-msg);
-  color: var(--c-text); align-self: flex-end;
+  color: #fff; align-self: flex-end; max-width: 82%;
+  position: relative;
 }
 .quick-action[data-click] { cursor: pointer; }
+.quick-action .msg-time { color: rgba(255,255,255,0.85); }
+.quick-action .msg-check { color: rgba(255,255,255,0.7); }
 
 /* Input bar */
 .input-bar {
@@ -436,12 +443,8 @@ body {
   <div class="sheet-title">О чём хотите спросить?</div>
   <div class="sheet-divider"></div>
   <div class="sheet-item" onclick="selectMenuItem()">
-    <div class="sheet-item-icon">
-      <svg viewBox="0 0 20 20" fill="none">
-        <path d="M10 2C6.13 2 3 5.13 3 9c0 2.4 1.2 4.5 3 5.74V15a1 1 0 001 1h6a1 1 0 001-1v-.26C15.8 13.5 17 11.4 17 9c0-3.87-3.13-7-7-7z" fill="#4389FF" opacity="0.2"/>
-        <path d="M10 2C6.13 2 3 5.13 3 9c0 2.4 1.2 4.5 3 5.74V15a1 1 0 001 1h6a1 1 0 001-1v-.26C15.8 13.5 17 11.4 17 9c0-3.87-3.13-7-7-7z" stroke="#4389FF" stroke-width="1.5"/>
-        <circle cx="10" cy="9" r="2" fill="#4389FF"/>
-      </svg>
+    <div class="sheet-item-icon" style="background:none;">
+      <img src="icons/question.png" style="width:44px;height:44px;border-radius:50%;">
     </div>
     <div class="sheet-item-text">
       <div class="sheet-item-title">Вопрос по обращению</div>
@@ -777,7 +780,7 @@ const CONVERSATIONS = [
     messages: [
       { from: 'user', text: '161 фз', time: '10:11' },
       { from: 'bot', text: 'Пока не нашёл ответа. Что предлагаю:<br>🧑‍💼 Сразу позвать сотрудника<br>⚡ Попробовать ещё раз со мной', time: '10:11' },
-      { from: 'action', text: 'Позови сотрудника' },
+      { from: 'action', text: 'Позови сотрудника', time: '10:11' },
     ]
   },
   {
@@ -794,7 +797,7 @@ const CONVERSATIONS = [
     id: 'today', date: 'Сегодня', year: null,
     topic: null, status: null, preview: null, operator: null,
     messages: [
-      { from: 'action', text: 'Вопрос по обращению', onclick: 'showMenu' },
+      { from: 'action', text: 'Вопрос по обращению', time: '00:43', onclick: 'showMenu' },
       { from: 'bot', text: 'Чтобы проверить статус вашего обращения, перейдите в раздел <span class="msg-link" onclick="showHistory()" style="cursor:pointer;">«Обращения»</span>.', time: '00:44' },
       { from: 'bot', text: 'И вам здравствуйте! Что вы хотите узнать?', time: '00:49' },
     ]
@@ -829,8 +832,8 @@ function renderMessage(msg) {
   if (msg.from === 'user') {
     const longClass = msg.long ? ' msg-long' : '';
     return `<div class="msg msg-user${longClass}">
-      ${msg.text}
-      <div class="msg-time">${msg.time} ${SVG_DOUBLE_CHECK}</div>
+      ${msg.text}<span class="msg-time-pad"></span>
+      <span class="msg-time">${msg.time} ${SVG_DOUBLE_CHECK}</span>
     </div>`;
   }
 
@@ -839,8 +842,8 @@ function renderMessage(msg) {
       <div class="msg-avatar"><img src="icons/logo.png" alt="Т"></div>
       <div class="msg msg-bot">
         <div class="msg-sender">Ассистент поддержки</div>
-        ${msg.text}
-        <div class="msg-time">${msg.time}</div>
+        ${msg.text}<span class="msg-time-pad"></span>
+        <span class="msg-time">${msg.time}</span>
       </div>
     </div>`;
   }
@@ -851,15 +854,18 @@ function renderMessage(msg) {
       <div class="msg-avatar msg-avatar-operator">${initial}</div>
       <div class="msg msg-operator">
         <div class="msg-sender">${msg.sender}</div>
-        ${msg.text}
-        <div class="msg-time">${msg.time}</div>
+        ${msg.text}<span class="msg-time-pad"></span>
+        <span class="msg-time">${msg.time}</span>
       </div>
     </div>`;
   }
 
   if (msg.from === 'action') {
     const clickAttr = msg.onclick ? ` data-click="1" onclick="${msg.onclick}()"` : '';
-    return `<div class="quick-action"${clickAttr}>${msg.text}</div>`;
+    return `<div class="quick-action"${clickAttr}>
+      ${msg.text}<span class="msg-time-pad"></span>
+      <span class="msg-time">${msg.time || ''} ${SVG_DOUBLE_CHECK}</span>
+    </div>`;
   }
 
   return '';
